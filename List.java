@@ -42,12 +42,14 @@ public class List {
     
     /** GIVE Textual representation of this list. */
     public String toString() {
-    String str = "";
+    if (size == 0) return "()";
+    String str = "(";
     CharData[] arr = new CharData[size];
     arr = this.toArray();
     for (int i = 0 ; i < arr.length ; i++){
         str += arr[i].toString() + " ";
     }
+    str = str.substring(0, str.length()-1) + ")";
                 return str;
     }
 
