@@ -90,7 +90,7 @@ public class LanguageModel {
         while (itr.hasNext()) {
             CharData current = itr.next();
             last = current;
-            if (current.cp < r) {
+            if (r < current.cp) {
                 return current.chr;
             }
         }
