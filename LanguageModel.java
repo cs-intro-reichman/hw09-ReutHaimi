@@ -85,15 +85,14 @@ public class LanguageModel {
     public char getRandomChar(List probs) {
         double r = randomGenerator.nextDouble();
         ListIterator itr = probs.listIterator(0);
-        char ans = ' ';
+
         while (itr.hasNext()) {
             CharData current = itr.next();
-            ans = current.chr;
             if (current.cp > r) {
                 return current.chr;
             }
         }
-        return ans;
+        return probs.get(probs.getSize()-1).chr;
     }
 
     
