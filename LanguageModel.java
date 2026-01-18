@@ -85,22 +85,19 @@ public class LanguageModel {
     public char getRandomChar(List probs) {
         double r = randomGenerator.nextDouble();
         ListIterator itr = probs.listIterator(0);
+        char ans = ' ';
         while (itr.hasNext()) {
             CharData current = itr.next();
+            ans = current.chr;
             if (current.cp > r) {
                 return current.chr;
             }
         }
-        return ' ';
+        return ans;
     }
 
-    /**
-	 * Generates a random text, based on the probabilities that were learned during training. 
-	 * @param initialText - text to start with. If initialText's last substring of size numberOfLetters
-	 * doesn't appear as a key in Map, we generate no text and return only the initial text. 
-	 * @param numberOfLetters - the size of text to generate
-	 * @return the generated text
-	 */
+    
+	//   Generates a random text, based on the probabilities that were learned during training.
 	public String generate(String initialText, int textLength) {
         if (initialText.length() < windowLength) {
             return initialText;
