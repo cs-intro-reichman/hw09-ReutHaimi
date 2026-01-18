@@ -161,32 +161,14 @@ public class LanguageModel {
 }
 
     /** Returns a string representing the map of this language model. */
+
 public String toString() {
-    StringBuilder sb = new StringBuilder();
-
-    String[] keys = new String[CharDataMap.size()];
-    int k = 0;
+    StringBuilder str = new StringBuilder();
     for (String key : CharDataMap.keySet()) {
-        keys[k++] = key;
+        List keyProbs = CharDataMap.get(key);
+        str.append(key + " : " + keyProbs + "\n");
     }
-
-    // bubble sort
-    for (int i = 0; i < keys.length - 1; i++) {
-        for (int j = 0; j < keys.length - 1 - i; j++) {
-            if (keys[j].compareTo(keys[j + 1]) > 0) {
-                String tmp = keys[j];
-                keys[j] = keys[j + 1];
-                keys[j + 1] = tmp;
-            }
-        }
-    }
-
-    for (int i = 0; i < keys.length; i++) {
-        String key = keys[i];
-        sb.append(key).append(" : ").append(CharDataMap.get(key)).append("\n");
-    }
-
-    return sb.toString();
+    return str.toString();
 }
 
 
