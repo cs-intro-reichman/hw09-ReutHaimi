@@ -56,31 +56,30 @@ public class LanguageModel {
     //     for (List probs : CharDataMap.values()) {
     //         calculateProbabilities(probs);
     //     }
-    // }
-    String str = "";
+    // 
+    String window = "";
     In in = new In(fileName);
 
+    // Reads just enough characters to form the first window
     for (int i = 0; i < windowLength; i++) {
         if (in.isEmpty()) return;
-        str += in.readChar();
+        window += in.readChar();
     }
 
+    // Processes the entire text
     while (!in.isEmpty()) {
-        char next = in.readChar();
+        char c = in.readChar();
 
-        List probs = CharDataMap.get(str);
+        List probs = CharDataMap.get(window);
         if (probs == null) {
             probs = new List();
-            CharDataMap.put(str, probs);
+            CharDataMap.put(window, probs);
         }
-        probs.update(next);
 
-        str = str.substring(1) + next;
+        probs.update(c);
+        window = window.substring(1) + c;
     }
 
-    if (!CharDataMap.containsKey(str)) {
-        CharDataMap.put(str, new List());
-    }
     for (List probs : CharDataMap.values()) {
         calculateProbabilities(probs);
     }
@@ -147,25 +146,19 @@ public class LanguageModel {
     //     }
     //     return generatedText;
     // }
-    if (initialText.length() < windowLength) {
-        return initialText;
-    }
+    if (initialText.length() < windowLength) return initialText;
 
     String generatedText = initialText;
     String window = generatedText.substring(generatedText.length() - windowLength);
 
     while (generatedText.length() < textLength) {
         List probs = CharDataMap.get(window);
-
-        if (probs == null || probs.getSize() == 0) {
-            break;
-        }
+        if (probs == null) break;
 
         char nextChar = getRandomChar(probs);
         generatedText += nextChar;
         window = generatedText.substring(generatedText.length() - windowLength);
     }
-
     return generatedText;
 }
 
