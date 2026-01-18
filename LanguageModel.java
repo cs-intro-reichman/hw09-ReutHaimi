@@ -85,16 +85,18 @@ public class LanguageModel {
     public char getRandomChar(List probs) {
         double r = randomGenerator.nextDouble();
         ListIterator itr = probs.listIterator(0);
-
+        CharData last = null;
+        
         while (itr.hasNext()) {
             CharData current = itr.next();
+            last = current;
             if (current.cp > r) {
                 return current.chr;
             }
         }
-        return probs.get(probs.getSize()-1).chr;
-    }
 
+        return last.chr;
+    }
     
 	//   Generates a random text, based on the probabilities that were learned during training.
 	public String generate(String initialText, int textLength) {
@@ -144,3 +146,5 @@ public class LanguageModel {
         System.out.println(lm.generate(initialText, generatedTextLength));
     }
 }
+
+
