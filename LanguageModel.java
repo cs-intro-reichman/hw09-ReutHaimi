@@ -60,27 +60,18 @@ public class LanguageModel {
     String window = "";
     In in = new In(fileName);
 
+    // first window
     for (int i = 0; i < windowLength; i++) {
         if (in.isEmpty()) return;
-        window += in.readChar();
+        char c = in.readChar();
+        if (Character.isWhitespace(c)) c = ' ';
+        window += c;
     }
 
-    String start = window; 
-
+    // scan
     while (!in.isEmpty()) {
         char c = in.readChar();
-
-        List probs = CharDataMap.get(window);
-        if (probs == null) {
-            probs = new List();
-            CharDataMap.put(window, probs);
-        }
-
-        probs.update(c);
-        window = window.substring(1) + c;
-    }
-    for (int i = 0; i < windowLength; i++) {
-        char c = start.charAt(i);
+        if (Character.isWhitespace(c)) c = ' ';
 
         List probs = CharDataMap.get(window);
         if (probs == null) {
