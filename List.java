@@ -46,7 +46,7 @@ public class List {
     CharData[] arr = new CharData[size];
     arr = this.toArray();
     for (int i = 0 ; i < arr.length ; i++){
-        str = arr[i].toString() + " ";
+        str += arr[i].toString() + " ";
     }
                 return str;
     }
