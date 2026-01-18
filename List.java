@@ -138,16 +138,27 @@ public class List {
 
     /** Returns an iterator over the elements in this list, starting at the given index. */
    public ListIterator listIterator(int index) {
+//     if (index < 0 || index > size) {
+//         throw new IndexOutOfBoundsException();
+//     }
+
+//     Node current = first;
+//     for (int i = 0; i < index; i++) {
+//         current = current.next;  
+//     }
+
+//     return new ListIterator(current);
+// }
     if (index < 0 || index > size) {
         throw new IndexOutOfBoundsException();
     }
 
     Node current = first;
     for (int i = 0; i < index; i++) {
-        current = current.next;  
+        current = current.next;
     }
 
-    return new ListIterator(current);
+    return new ListIterator(current); 
 }
     
 }
