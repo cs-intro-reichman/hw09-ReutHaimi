@@ -57,36 +57,31 @@ public class LanguageModel {
     //         calculateProbabilities(probs);
     //     }
     // 
-    String window = "";
-    In in = new In(fileName);
-
-    // first window
-    for (int i = 0; i < windowLength; i++) {
-        if (in.isEmpty()) return;
-        char c = in.readChar();
-        if (Character.isWhitespace(c)) c = ' ';
-        window += c;
-    }
-
-    // scan
-    while (!in.isEmpty()) {
-        char c = in.readChar();
-        if (Character.isWhitespace(c)) c = ' ';
-
-        List probs = CharDataMap.get(window);
-        if (probs == null) {
-            probs = new List();
-            CharDataMap.put(window, probs);
+    /** Builds a language model from the text in the given file (the corpus). */
+        String window = "";
+        char c;
+        In in = new In(fileName); 
+        for (int i = 0; i < windowLength; i++) {
+            if (in.isEmpty()) return;
+            window += in.readChar();
         }
+        while (!in.isEmpty()) {
+            c = in.readChar(); 
 
-        probs.update(c);
-        window = window.substring(1) + c;
-    }
+            List probs = CharDataMap.get(window);
 
-    for (List probs : CharDataMap.values()) {
-        calculateProbabilities(probs);
+            if (probs == null) {
+                probs = new List();
+                CharDataMap.put(window, probs);
+            }
+
+            probs.update(c);
+            window = window.substring(1) + c;
+        }
+        for (List probs : CharDataMap.values()) {
+            calculateProbabilities(probs);
+        }
     }
-}
 
     // Computes and sets the probabilities (p and cp fields) of all the
 	// characters in the given list. */
