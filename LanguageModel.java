@@ -34,19 +34,52 @@ public class LanguageModel {
     /** Builds a language model from the text in the given file (the corpus). */
 	public void train(String fileName) {
 		// Your code goes here
+        In in = new In(fileName);
+        String window = "";
+        for (int i = 0; i < windowLength; i++) {
+            if (in.isEmpty()) return; 
+            window += in.readChar();
+        }
+        while (!in.isEmpty()) {
+            char c = in.readChar();
+            List probs = CharDataMap.get(window);
+            if (probs == null) {
+                probs = new List();
+                CharDataMap.put(window, probs);
+            }
+            probs.update(c);
+            window = window.substring(1) + c;
+        }
+        for (List probs : CharDataMap.values()) {
+            calculateProbabilities(probs);
+        }
 	}
 
     // Computes and sets the probabilities (p and cp fields) of all the
 	// characters in the given list. */
 	void calculateProbabilities(List probs) {				
 		// Your code goes here
+        int totalChars = 0;
+        for (int i = 0; i < probs.getSize(); i++) {
+            totalChars += probs.get(i).count;
+        }
+        double cumulativeProb = 0.0;
+        for (int i = 0; i < probs.getSize(); i++) {
+            CharData current = probs.get(i);
+            current.p = (double) current.count / totalChars;
+            cumulativeProb += current.p;
+            current.cp = cumulativeProb;
+        }
 	}
 
     // Returns a random character from the given probabilities list.
 	char getRandomChar(List probs) {
 		// Your code goes here
-		return ' ';
-	}
+        double r = randomGenerator.nextDouble();
+        for (int i = 0; i < probs.getSize(); i++) {
+            if (probs.get(i).cp > r) return probs.get(i).chr;
+        }
+        return probs.get(probs.getSize() - 1).chr;	}
 
     /**
 	 * Generates a random text, based on the probabilities that were learned during training. 
@@ -57,8 +90,19 @@ public class LanguageModel {
 	 */
 	public String generate(String initialText, int textLength) {
 		// Your code goes here
-        return "";
-	}
+        if (initialText.length() < windowLength) return initialText;
+        String window = initialText.substring(initialText.length() - windowLength);
+        String generatedText = initialText;
+        int limit = initialText.length() + textLength;
+        while (generatedText.length() < limit) {
+            List probs = CharDataMap.get(window);
+            if (probs == null) break;
+            char nextChar = getRandomChar(probs);
+            generatedText += nextChar;
+            window = generatedText.substring(generatedText.length() - windowLength);
+        }
+        return generatedText;
+    }
 
     /** Returns a string representing the map of this language model. */
 	public String toString() {
@@ -72,5 +116,5 @@ public class LanguageModel {
 
     public static void main(String[] args) {
 		// Your code goes here
-    }
+    }// I daleted my main function according to page 3 of the pdf...
 }
